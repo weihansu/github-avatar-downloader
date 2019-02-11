@@ -1,5 +1,11 @@
+# .DS_Store
+.DS_Store
+
 # Secrets
 secrets.js
+
+# Folders
+avatars/
 
 # Logs
 logs
