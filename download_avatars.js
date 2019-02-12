@@ -1,6 +1,13 @@
 const request = require('request');
 const secrets = require('./secrets.js');
 const fs = require('fs');
+const args = process.argv;
+const argRepoOwner = args[2];
+const argRepoName = args[3];
+
+// console.log('This is Repo Owner: ' + argRepoOwner);
+// console.log('This is Repo Name: ' + argRepoName);
+
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
@@ -30,7 +37,7 @@ function handleData(error, response, body) {
   });
 };
 
-getRepoContributors('jquery', 'jquery', handleData);
+getRepoContributors(argRepoOwner, argRepoName, handleData);
 
 function downloadImageByURL(url, filePath) {
   // fs.createWriteStream(filePath);
