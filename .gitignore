@@ -4,9 +4,6 @@
 # Secrets
 secrets.js
 
-# Folders
-avatars/
-
 # Logs
 logs
 *.log

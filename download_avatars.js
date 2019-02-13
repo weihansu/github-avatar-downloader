@@ -1,13 +1,10 @@
 const request = require('request');
 const secrets = require('./secrets.js');
 const fs = require('fs');
+
 const args = process.argv;
 const argRepoOwner = args[2];
 const argRepoName = args[3];
-
-// console.log('This is Repo Owner: ' + argRepoOwner);
-// console.log('This is Repo Name: ' + argRepoName);
-
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
@@ -19,7 +16,6 @@ function getRepoContributors(repoOwner, repoName, cb) {
       'Authorization': "token " + secrets.token
     }
   };
-  console.log(options);
   request(options, cb);
 }
 
@@ -33,14 +29,10 @@ function handleData(error, response, body) {
     let pathName = 'avatars/' + element.login;
     let downloadUrl = element.avatar_url
     downloadImageByURL(downloadUrl, pathName)
-    // console.log(`User ${element.login} image download complete in path ${pathName}`)
   });
 };
 
-getRepoContributors(argRepoOwner, argRepoName, handleData);
-
 function downloadImageByURL(url, filePath) {
-  // fs.createWriteStream(filePath);
   let currentPath = filePath.split('/')[0];
   let user = filePath.split('/')[1];
 
@@ -48,16 +40,17 @@ function downloadImageByURL(url, filePath) {
         fs.mkdirSync(currentPath);
       }
 
-  let downloder = fs.createWriteStream(filePath);
-
   request.get(url)
     .on('error', function (err) {
       throw err;
     })
     .on('response', function (response) {
-      console.log(`Downloading image of user ${user}`)
+      console.log(`Downloading image of user ${user.toUpperCase()}`)
       console.log('Response Status Code: ', response.statusCode);
+      filePath = filePath + '.' + response.headers['content-type'].split('/')[1];
+      let downloader = fs.createWriteStream(filePath);
+      response.pipe(downloader);
     })
-    .pipe(downloder);
 }
 
+getRepoContributors(argRepoOwner, argRepoName, handleData);
